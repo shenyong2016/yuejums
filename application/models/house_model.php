@@ -53,6 +53,17 @@ class House_model extends CI_Model {
     return $this -> db -> affected_rows();
   }
 
+  public function get_house_by_house_id($house_id){
+    return $this -> db -> get_where('t_house_info', array(
+      'house_id' => $house_id
+    )) -> row();
+  }
+
+  public function get_house_img_by_house_id($house_id){
+    return $this -> db -> get_where('t_house_img', array(
+      'house_id' => $house_id
+    )) -> result();
+  }
 
 
 

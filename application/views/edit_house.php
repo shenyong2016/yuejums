@@ -7,7 +7,7 @@
   <title>编辑房源</title>
   <base href="<?php echo site_url();?>">
   <link rel="stylesheet" href="assets/css/elementUI.css">
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/houseManage.css">
   <link rel="stylesheet" href="assets/css/houseEidt.css">
@@ -64,8 +64,8 @@
         <el-row>
           <el-col :span="12">
             <span>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            使用面积<el-input size="mini" v-model="userArea"></el-input>            
             建筑面积<el-input size="mini" v-model="buildArea"></el-input>
-            使用面积<el-input size="mini" v-model="userArea"></el-input>
           </el-col>
           <el-col :span="12">
             <span>区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;域</span>
@@ -252,7 +252,7 @@
         note: '',
         saleType: false,
         recommend: false,
-        houseImgList: []
+        houseImgList: [],
       },
       methods: {
         checkNum(value){
@@ -325,16 +325,11 @@
           const houseType = room +'室'+ hall +'厅'+ toilet +'卫';
           const houseImg = houseImgList.join(',');
           let recommendVal = recommend ? 1 : 0;
-          let saleTypeVal = saleType ? 1 : 0;
-          console.log('recommendVal',recommendVal);
-          console.log('saleTypeVal',saleTypeVal);
-          console.log('houseSize',houseSize);
-          console.log('houseSizeName',houseSizeName); 
-          console.log('houseType',houseType); 
+          let saleTypeVal = saleType ? 2 : 1;
           axios.get('house/commit_house_info', {
             params: { village,houseName,houseSize,buildArea,userArea,location,
                       price,position,address,traffic,detail,note,houseImg,recommendVal,
-                      saleTypeVal,villageName,houseSizeName,locationName,houseId,
+                      saleTypeVal,villageName,houseSizeName,locationName,houseId,houseType,
                       houseImgList: JSON.stringify(houseImgList)}
           }).then(res => {               
             if(res.data == 'success'){
@@ -343,7 +338,10 @@
                 showClose: true,
                 message: '添加房源成功',
                 duration: 1000
-              });                         
+              }); 
+              setTimeout(() => {
+                window.location.href = "welcome/index";                                                      
+              }, 1000);
             }else{
               this.$message({
                 type: 'error',
@@ -353,10 +351,39 @@
               });
             }
           });
+        },
+        loadHouseData(){
+          axios.get('house/get_house_detail', {
+            params: {houseId: this.houseId}
+          }).then(res => {
+            var houseData = res.data.house;
+            var houseImgData = res.data.house_img; 
+            for(var i=0; i<houseImgData.length; i++){
+              this.houseImgList.push(houseImgData[i].img_src.slice(8));
+            }
+            console.log(houseData);
+            this.village = Number(houseData.village_type);
+            this.houseName = houseData.house_name;
+            this.houseSize = Number(houseData.house_size_val);
+            this.room = houseData.house_type.charAt(0);
+            this.hall = houseData.house_type.charAt(2);
+            this.toilet = houseData.house_type.charAt(4);
+            this.userArea = houseData.house_user_area;
+            this.buildArea = houseData.house_build_area;
+            this.location = houseData.house_location;
+            this.price = houseData.house_price;
+            this.position = houseData.house_lng_lat;
+            this.address = houseData.house_address;
+            this.traffic = houseData.house_traffic;
+            this.detail = houseData.house_details;
+            this.note = houseData.house_note;
+          });
         }
       },
       created(){
-        // console.log('houseId', this.village);
+        if(this.houseId){
+          this.loadHouseData();
+        }
       }
     });
   

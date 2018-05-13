@@ -32,6 +32,21 @@ class House extends CI_Controller {
    public function edit_house(){
     $this -> load -> view('edit_house');
   }
+
+  // 获取房源详情
+  public function get_house_detail(){
+    $house_id = $this -> input -> get('houseId');
+    $house = $this -> house_model -> get_house_by_house_id($house_id);
+    $house_img = $this -> house_model -> get_house_img_by_house_id($house_id);
+    
+    echo json_encode(array(
+      'house' => $house,
+      'house_img' => $house_img
+    ));
+  }
+
+
+
   
   //提交房源
   public function commit_house_info(){
