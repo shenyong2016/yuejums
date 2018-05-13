@@ -20,7 +20,7 @@ class Welcome extends CI_Controller {
     if($upload_data['file_size'] > 0){
         $photo_url = 'images/' . $upload_data['file_name'];
         echo $photo_url;
-    }
+      }
   }
   // 删除图片
   public function delete_img(){

@@ -32,6 +32,56 @@ class House extends CI_Controller {
    public function edit_house(){
     $this -> load -> view('edit_house');
   }
+  
+  //提交房源
+  public function commit_house_info(){
+    $village = $this -> input -> get('village');
+    $house_name = $this -> input -> get('houseName');
+    $house_size = $this -> input -> get('houseSize');
+    $build_area = $this -> input -> get('buildArea');
+    $user_area = $this -> input -> get('userArea');
+    $price = $this -> input -> get('price');
+    $position = $this -> input -> get('position');
+    $address = $this -> input -> get('address');
+    $traffic = $this -> input -> get('traffic');
+    $detail = $this -> input -> get('detail');
+    $note = $this -> input -> get('note');
+    $house_img_list = $this -> input -> get('houseImgList');
+    $sale_type = $this -> input -> get('saleTypeVal');
+    $village_name = $this -> input -> get('villageName');
+    $house_size_name = $this -> input -> get('houseSizeName');
+    $location_name = $this -> input -> get('locationName');
+    $house_type = $this -> input -> get('houseType');
+    $house_id = $this -> input -> get('houseId');
+    $recommend = $this -> input -> get('recommendVal');
+    $house_img = json_decode($house_img_list);
+    $img_url = 'yuejums/';//图片保存到yuejums里
+    if($house_id){
+
+    }else{
+      $insert_id = $this -> house_model -> save_house_info($village,$house_name,$house_size,$recommend,
+                      $build_area,$user_area,$price,$position,$address,$traffic,$detail,
+                      $note,$sale_type,$village_name,$house_size_name,$location_name,$house_type);
+      
+      if($insert_id){
+        foreach($house_img as $index => $item){
+          $img_info = array(
+            'is_main' => $index == 0 ? 1 : 0,
+            'img_src' => $img_url.$item,
+            'house_id' => $insert_id
+          );
+          $row = $this -> house_model -> save_house_img($img_info);
+        }
+        if($row > 0){
+          echo 'success';
+        }else{
+          echo 'fail';
+        }
+      }
+    }
+    
+    
+  } 
 
 	
  

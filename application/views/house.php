@@ -26,7 +26,7 @@
         <h4>房源管理</h4>
         <div class="mange-house" id="mange-house">
           <div class="btn-group">
-            <el-button type="info" icon="el-icon-plus" size="mini">添加</el-button>
+            <el-button v-on:click="addHouse" type="info" icon="el-icon-plus" size="mini">添加</el-button>
             <el-button type="info" icon="el-icon-minus" size="mini"
                       v-on:click="deleteHouseList">删除</el-button>
           </div>
@@ -110,6 +110,9 @@
           var houseId = this.houseIdList.join(',');
           this.deleteHouse(houseId);
           this.loadHouseList(this.page, this.pageSize);                  
+        },
+        addHouse(){
+          window.location.href = "house/edit_house";
         },
         deleteHouse(houseId){
           this.$confirm('确认删除该房源，是否继续?', '提示', {

@@ -7,7 +7,7 @@
   <title>编辑房源</title>
   <base href="<?php echo site_url();?>">
   <link rel="stylesheet" href="assets/css/elementUI.css">
-  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/houseManage.css">
   <link rel="stylesheet" href="assets/css/houseEidt.css">
@@ -64,8 +64,8 @@
         <el-row>
           <el-col :span="12">
             <span>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            建筑面积<el-input size="small" v-model="buildArea"></el-input>
-            使用面积<el-input size="small" v-model="userArea"></el-input>
+            建筑面积<el-input size="mini" v-model="buildArea"></el-input>
+            使用面积<el-input size="mini" v-model="userArea"></el-input>
           </el-col>
           <el-col :span="12">
             <span>区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;域</span>
@@ -81,8 +81,16 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <span>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;钱</span>
-            <el-input size="small" v-model="price"></el-input>/日
+            <el-col :span="8">
+              <span>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;钱</span>
+              <el-input size="mini" v-model="price"></el-input>/日
+            </el-col>
+            <el-col :span="2">
+              <el-checkbox v-model="saleType">可售</el-checkbox>
+            </el-col>
+            <el-col :span="2">
+              <el-checkbox v-model="recommend">推荐</el-checkbox>
+            </el-col>
           </el-col>
           <el-col :span="12">
             <span>经&nbsp;&nbsp;纬&nbsp;&nbsp;度</span>
@@ -91,26 +99,26 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <span>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址</span>
-            <el-input v-model="address"></el-input>
+            <span class="house-title">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址</span>
+            <el-input type="textarea" v-model="address"></el-input>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <span>交通情况</span>
-            <el-input v-model="traffic"></el-input>
+          <el-col :span="16">
+            <span class="house-title">交通情况</span>
+            <el-input type="textarea" v-model="traffic"></el-input>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <span>房源详情</span>
-            <el-input v-model="detail"></el-input>
+          <el-col :span="16">
+            <span class="house-title">房源详情</span>
+            <el-input type="textarea" v-model="detail"></el-input>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <span>入住须知</span>
-            <el-input v-model="note"></el-input>
+          <el-col :span="16">
+            <span class="house-title">入住须知</span>
+            <el-input type="textarea" v-model="note"></el-input>
           </el-col>
         </el-row>
         <el-row>
@@ -137,7 +145,7 @@
         </el-row>
         <el-row>
           <p class="submit">
-            <buuton class="submit-house" type="primary">{{houseId ? '修改' : '添加'}}房源</buuton>          
+            <buuton class="submit-house" type="primary" v-on:click="submitInfo">{{houseId ? '修改' : '添加'}}房源</buuton>          
           </p>
         </el-row>
       </div>
@@ -165,23 +173,23 @@
           }, 
           {
             value: 2,
-            label: '哈尔滨悦居连锁公寓•熙俊印象店'
+            label: '悦居公寓•熙俊印象'
           }, 
           {
             value: 3,
-            label: '哈尔滨悦居连锁公寓•群力家园店'
+            label: '悦居公寓•群力家园'
           }, 
           {
             value: 4,
-            label: '哈尔滨悦居连锁公寓•雨阳名居店'
+            label: '悦居公寓•雨阳名居'
           }, 
           {
             value: 5,
-            label: '哈尔滨悦居连锁公寓•玫瑰湾店'
+            label: '悦居公寓•玫瑰湾'
           },
           {
             value: 6,
-            label: '哈尔滨悦居连锁公寓•新怡园店'
+            label: '悦居公寓•新怡园'
           }
         ],
         houseSizeOptions: [
@@ -242,9 +250,21 @@
         traffic: '',
         detail: '',
         note: '',
+        saleType: false,
+        recommend: false,
         houseImgList: []
       },
       methods: {
+        checkNum(value){
+          if(!/^\d+$/.test(value)){
+            this.$message({
+              type: 'warning',
+              showClose: true,
+              message: '请输入数字',
+              duration: 1000
+            });
+          }
+        },
         triggerUpload(){
           this.$refs.file.click();
         },
@@ -259,10 +279,80 @@
           });
         },
         deleteImg(index){
-          var deleteImgSrc = this.houseImgList[index];
-          // console.log('index===', index);
-          axios.get();
-          this.houseImgList.splice(index, 1);
+          var imgSrc = this.houseImgList[index];
+          axios.get('welcome/delete_img', {
+            params: { imgSrc }
+          }).then(res => {
+            if(res.data == 'success'){
+              this.houseImgList.splice(index, 1);                        
+            }
+          });
+        },
+        submitInfo(){
+          const { village,houseName,houseSize,room,hall,toilet,buildArea,userArea,
+                  location,price,position,address,traffic,detail,note,houseImgList,
+                  saleType,villageOptions,houseSizeOptions,locationOptions,houseId,recommend} = this;
+          const villageName = villageOptions[village-1].label;
+          const houseSizeName = houseSizeOptions[houseSize-1].label;
+          const locationName = locationOptions[location-1].label;
+          if(!/^\d+$/.test(buildArea) || !/^\d+$/.test(userArea)){
+            this.$message({
+              type: 'warning',
+              showClose: true,
+              message: '面积请输入数字',
+              duration: 1000
+            });
+            return;
+          }
+          if(!/^\d+$/.test(room) || !/^\d+$/.test(hall) || !/^\d+$/.test(toilet)){
+            this.$message({
+              type: 'warning',
+              showClose: true,
+              message: '房屋类型请输入数字',
+              duration: 1000
+            });
+            return;
+          }
+          if(!/^\d+$/.test(price)){
+            this.$message({
+              type: 'warning',
+              showClose: true,
+              message: '价钱请输入数字',
+              duration: 1000
+            });
+            return;
+          }
+          const houseType = room +'室'+ hall +'厅'+ toilet +'卫';
+          const houseImg = houseImgList.join(',');
+          let recommendVal = recommend ? 1 : 0;
+          let saleTypeVal = saleType ? 1 : 0;
+          console.log('recommendVal',recommendVal);
+          console.log('saleTypeVal',saleTypeVal);
+          console.log('houseSize',houseSize);
+          console.log('houseSizeName',houseSizeName); 
+          console.log('houseType',houseType); 
+          axios.get('house/commit_house_info', {
+            params: { village,houseName,houseSize,buildArea,userArea,location,
+                      price,position,address,traffic,detail,note,houseImg,recommendVal,
+                      saleTypeVal,villageName,houseSizeName,locationName,houseId,
+                      houseImgList: JSON.stringify(houseImgList)}
+          }).then(res => {               
+            if(res.data == 'success'){
+              this.$message({
+                type: 'success',
+                showClose: true,
+                message: '添加房源成功',
+                duration: 1000
+              });                         
+            }else{
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: '添加房源失败',
+                duration: 1000
+              });
+            }
+          });
         }
       },
       created(){
