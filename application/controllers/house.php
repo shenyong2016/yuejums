@@ -72,6 +72,23 @@ class House extends CI_Controller {
     $house_img = json_decode($house_img_list);
     $img_url = 'yuejums/';//图片保存到yuejums里
     if($house_id){
+      $u_row = $this -> house_model -> update_house_info($house_id,$village,$house_name,$house_size,$recommend,
+                      $build_area,$user_area,$price,$position,$address,$traffic,$detail,
+                      $note,$sale_type,$village_name,$house_size_name,$location_name,$house_type);
+      $d_row = $this -> house_model -> delete_house_img($house_id);
+        foreach($house_img as $index => $item){
+          $img_info = array(
+            'is_main' => $index == 0 ? 1 : 0,
+            'img_src' => $img_url.$item,
+            'house_id' => $house_id
+          );
+          $s_row = $this -> house_model -> save_house_img($img_info);
+        }
+        if($s_row > 0){
+          echo 'update';
+        }else{
+          echo 'no_update';
+        }
 
     }else{
       $insert_id = $this -> house_model -> save_house_info($village,$house_name,$house_size,$recommend,

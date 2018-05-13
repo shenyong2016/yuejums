@@ -48,6 +48,33 @@ class House_model extends CI_Model {
     return $this -> db -> insert_id();
   }
 
+  public function update_house_info($house_id,$village,$house_name,$house_size,$recommend,
+  $build_area,$user_area,$price,$position,$address,$traffic,$detail,
+  $note,$sale_type,$village_name,$house_size_name,$location_name,$house_type){
+    $this -> db -> where('house_id', $house_id);
+    $this -> db -> update('t_house_info', array(
+      'village_type' => $village,
+      'house_name' => $house_name,
+      'house_size' => $house_size_name,
+      'house_size_val' => $house_size,
+      'house_build_area' => $build_area,
+      'house_user_area' => $user_area,
+      'house_location' => $location_name,
+      'house_address' => $address,
+      'house_traffic' => $traffic,
+      'house_details' => $detail,
+      'house_note' => $note,
+      'sale_type' => $sale_type,
+      'village_name' => $village_name,
+      'house_type' => $house_type,
+      'house_recommened' => $recommend,
+      'house_price' => $price,
+      'house_lng_lat' => $position,
+      'is_delete' => 0
+    ));
+    return $this -> db -> affected_rows();
+  }
+
   public function save_house_img($img_info){
     $this -> db -> insert('t_house_img', $img_info);
     return $this -> db -> affected_rows();
@@ -63,6 +90,13 @@ class House_model extends CI_Model {
     return $this -> db -> get_where('t_house_img', array(
       'house_id' => $house_id
     )) -> result();
+  }
+
+  public function delete_house_img($house_id){
+    $this -> db -> delete('t_house_img', array(
+      'house_id' => $house_id
+    )); 
+    return $this -> db -> affected_rows();
   }
 
 

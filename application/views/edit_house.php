@@ -7,7 +7,7 @@
   <title>编辑房源</title>
   <base href="<?php echo site_url();?>">
   <link rel="stylesheet" href="assets/css/elementUI.css">
-  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/houseManage.css">
   <link rel="stylesheet" href="assets/css/houseEidt.css">
@@ -293,8 +293,9 @@
                   location,price,position,address,traffic,detail,note,houseImgList,
                   saleType,villageOptions,houseSizeOptions,locationOptions,houseId,recommend} = this;
           const villageName = villageOptions[village-1].label;
-          const houseSizeName = houseSizeOptions[houseSize-1].label;
+          const houseSizeName = houseSizeOptions[houseSize-1].label;          
           const locationName = locationOptions[location-1].label;
+          console.log('houseImgList===',houseImgList);
           if(!/^\d+$/.test(buildArea) || !/^\d+$/.test(userArea)){
             this.$message({
               type: 'warning',
@@ -323,12 +324,11 @@
             return;
           }
           const houseType = room +'室'+ hall +'厅'+ toilet +'卫';
-          const houseImg = houseImgList.join(',');
           let recommendVal = recommend ? 1 : 0;
           let saleTypeVal = saleType ? 2 : 1;
           axios.get('house/commit_house_info', {
             params: { village,houseName,houseSize,buildArea,userArea,location,
-                      price,position,address,traffic,detail,note,houseImg,recommendVal,
+                      price,position,address,traffic,detail,note,recommendVal,
                       saleTypeVal,villageName,houseSizeName,locationName,houseId,houseType,
                       houseImgList: JSON.stringify(houseImgList)}
           }).then(res => {               
@@ -342,6 +342,23 @@
               setTimeout(() => {
                 window.location.href = "welcome/index";                                                      
               }, 1000);
+            }else if(res.data == 'update'){
+              this.$message({
+                type: 'success',
+                showClose: true,
+                message: '修改房源成功',
+                duration: 1000
+              }); 
+              setTimeout(() => {
+                window.location.href = "welcome/index";                                                      
+              }, 1000);
+            }else if(res.data == 'no_update'){
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: '修改房源失败',
+                duration: 1000
+              });
             }else{
               this.$message({
                 type: 'error',
@@ -370,13 +387,23 @@
             this.toilet = houseData.house_type.charAt(4);
             this.userArea = houseData.house_user_area;
             this.buildArea = houseData.house_build_area;
-            this.location = houseData.house_location;
+            const locationObj = {
+              '香坊区': 1,
+              '南岗区': 2,
+              '动力区': 3,
+              '道里区': 4,
+              '道外区': 5,
+              '江北区': 6,
+            };
+            this.location = locationObj[houseData.house_location];
             this.price = houseData.house_price;
             this.position = houseData.house_lng_lat;
             this.address = houseData.house_address;
             this.traffic = houseData.house_traffic;
             this.detail = houseData.house_details;
             this.note = houseData.house_note;
+            this.saleType = Number(houseData.sale_type) == 2 ? true : false;
+            this.recommend = Number(houseData.house_recommened) == 1 ? true : false;
           });
         }
       },
