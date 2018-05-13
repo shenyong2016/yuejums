@@ -1,0 +1,81 @@
+/* right-content */
+.right-content{
+  flex: 1;
+}
+.user{
+  height: 50px;
+  background: #fff;
+  text-align: right;
+  line-height: 50px;
+}
+.user a{
+  padding: 12px 10px;
+  margin-right: 10px; 
+}
+.user a:hover{
+  background: #424f63;
+  color: #65CEA7;
+}
+.right-content h4{
+  color: #49586e;
+  font-size: 20px;
+  font-weight: normal;
+  margin: 10px 0;
+  padding-left: 10px;
+}
+.mange-house{
+  padding: 20px 10px;
+  background: #fff;
+}
+.btn-group{
+  padding: 10px 0;
+}
+.el-button--info{
+  background: #424f63;
+}
+.el-button--info span,.el-button--info i{
+  color: #fff;
+}
+.house-table{
+  padding-bottom: 20px;
+}
+.house-table table{
+  width: 100%;
+}
+.house-table table,.house-table th,.house-table td{
+  border: 1px solid #dfe6ec;
+  border-collapse: collapse;
+  text-align: center;
+}
+.house-table thead tr{
+ 
+  background: #eef1f6;
+}
+.house-table thead tr th.first{
+  display: flex;
+  align-items: center;
+}
+.house-table thead tr th.first input{
+  margin-left: 5px;
+}
+.house-table td, .house-table th{
+  padding: 10px 10px;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  font-size: 14px;
+  color: #1f2d3d;
+}
+.house-table td a:hover{
+  color: #65CEA7;
+}
+
+/* 分页 */
+.pagination{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  
+}
+.el-pagination{
+  width: 500px;
+}
