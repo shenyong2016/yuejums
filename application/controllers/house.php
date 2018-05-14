@@ -33,6 +33,10 @@ class House extends CI_Controller {
     $this -> load -> view('edit_house');
   }
 
+  //房源详情
+  public function house_detail(){
+    $this -> load -> view('house_detail');
+  }
   // 获取房源详情
   public function get_house_detail(){
     $house_id = $this -> input -> get('houseId');
@@ -76,19 +80,19 @@ class House extends CI_Controller {
                       $build_area,$user_area,$price,$position,$address,$traffic,$detail,
                       $note,$sale_type,$village_name,$house_size_name,$location_name,$house_type);
       $d_row = $this -> house_model -> delete_house_img($house_id);
-        foreach($house_img as $index => $item){
-          $img_info = array(
-            'is_main' => $index == 0 ? 1 : 0,
-            'img_src' => $img_url.$item,
-            'house_id' => $house_id
-          );
-          $s_row = $this -> house_model -> save_house_img($img_info);
-        }
-        if($s_row > 0){
-          echo 'update';
-        }else{
-          echo 'no_update';
-        }
+      foreach($house_img as $index => $item){
+        $img_info = array(
+          'is_main' => $index == 0 ? 1 : 0,
+          'img_src' => $img_url.$item,
+          'house_id' => $house_id
+        );
+        $s_row = $this -> house_model -> save_house_img($img_info);
+      }
+      if($s_row > 0){
+        echo 'update';
+      }else{
+        echo 'no_update';
+      }
 
     }else{
       $insert_id = $this -> house_model -> save_house_info($village,$house_name,$house_size,$recommend,

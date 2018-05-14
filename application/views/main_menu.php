@@ -12,11 +12,7 @@
       <span class="menu-icon menu-order"></span>
       <span class="menu-info">订单管理</span>
     </li>
-    <li>
-      <span class="menu-icon menu-user"></span>
-      <span class="menu-info">用户管理</span>
-    </li>
-    <li>
+    <li class="logout">
       <span class="menu-icon menu-exit"></span>
       <span class="menu-info">退出系统</span>
     </li>

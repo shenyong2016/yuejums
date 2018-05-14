@@ -1,8 +1,37 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
+  public function __construct(){
+    parent::__construct();
+    $this -> load -> model('welcome_model');
+  }
+  // 登录
+  public function login(){
+    $this -> load -> view('login');
+  }
+
+  // 登录验证
+  public function check_login(){
+    $username = $this -> input -> post('username');
+    $password = $this -> input -> post('password');
+    $check_user = $this -> welcome_model -> get_user($username, $password);
+    if($check_user){
+      $this -> session -> set_userdata('loginedUser', $check_user);
+      echo 'success';
+    }else{
+      echo 'fail';
+    }
+  }
+
+  // 用户注销
+  public function logout(){
+    $this -> session -> unset_userdata('loginedUser');
+    echo 'success';
+  }
 
 
+
+  // 房源管理
 	public function index(){
 		$this -> load -> view('house');
   }

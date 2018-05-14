@@ -1,3 +1,5 @@
+<?php $loginedUser = $this -> session -> userdata('loginedUser');?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +25,10 @@
       <!-- 用户 -->
       <?php include 'user.php';?>
       <!-- 用户 -->
-      <h4>{{houseId ? '编辑房源' : '添加房源'}}</h4>
+      <div style="display: flex;flex-direction: row;height: 50px; justify-content: space-between;">
+        <div class="page-title" style="width: 100px;">{{houseId ? '编辑房源' : '添加房源'}}</div>
+        <a href="welcome/index" class="go-back">房源列表</a> 
+      </div>
       <div class="mange-house">
         <el-row>
           <el-col :span="12">
@@ -295,7 +300,7 @@
           const villageName = villageOptions[village-1].label;
           const houseSizeName = houseSizeOptions[houseSize-1].label;          
           const locationName = locationOptions[location-1].label;
-          console.log('houseImgList===',houseImgList);
+          // console.log('houseImgList===',houseImgList);
           if(!/^\d+$/.test(buildArea) || !/^\d+$/.test(userArea)){
             this.$message({
               type: 'warning',

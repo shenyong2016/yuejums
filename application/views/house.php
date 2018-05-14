@@ -1,3 +1,4 @@
+<?php $loginedUser = $this -> session -> userdata('loginedUser');?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,7 @@
   <link rel="stylesheet" href="assets/css/houseManage.css">
 </head>
 <body>
-  <div class="container">
+  <div class="container" data-user="<?php echo $loginedUser ? $loginedUser->username : '';?>">
     <!-- 左侧菜单 -->
     <?php include 'main_menu.php';?>
     <!-- 左侧菜单 --> 
@@ -54,6 +55,7 @@
                   <td>{{house.house_size}}</td>
                   <td>{{house.house_address}}</td>
                   <td>
+                    <a :href="`house/house_detail/${house.house_id}`">详情</a>
                     <a :href="`house/edit_house/${house.house_id}`">编辑</a>
                     <a href="javascript:;" v-on:click="deleteHouse(house.house_id)">删除</a>                  
                   </td>
@@ -88,6 +90,13 @@
   <script src="assets/js/pagination.js"></script>
   <script src="assets/js/menu.js"></script>
   <script>
+    $(function(){
+      var user = $('.container').data('user');
+      console.log(user);
+      if(!user){
+        window.location.href = 'welcome/login';
+      }
+    });
     new Vue({
       el: '#mange-house',
       data: {
@@ -98,6 +107,9 @@
         houseIdList: []
       },
       methods: {
+        goHouseDetail(houseId){
+          console.log(houseId);
+        },
         deleteHouseList(){
           if(this.houseIdList.length == 0){
             this.$message({
@@ -106,8 +118,9 @@
               message: '请选择要删除的房源',
               duration: 1000
             });
+            return;
           }
-          var houseId = this.houseIdList.join(',');
+          var houseId = this.houseIdList.join(',');                    
           this.deleteHouse(houseId);
           this.loadHouseList(this.page, this.pageSize);                  
         },

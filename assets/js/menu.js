@@ -14,6 +14,8 @@ $(function(){
       case 1:
         url = "order/index";
         break;
+      case 2:
+        url = "javascript:;";
     }
     window.location.href = url;
   });
@@ -24,4 +26,14 @@ $(function(){
     $tab.eq(index).children('.menu-icon').addClass('active').parent('li')
     .siblings().children('.menu-icon').removeClass('active');
   }
+
+  // 退出系统
+  $('.logout').on('click', function(){
+    console.log(123456);
+    $.get('welcome/logout', function(res){
+      if(res == 'success'){
+        window.location.href = "welcome/login";
+      }
+    }, 'text');
+  });
 });
