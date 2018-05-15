@@ -71,7 +71,7 @@
               :pager-count="4"
               :page-size="pageSize"
               :page-sizes="[4, 8, 12, 16]"
-              layout="sizes, prev, pager, next"
+              layout="total,sizes, prev, pager, next"
               v-on:current-change="handleCurrentChange"
               v-on:size-change="handleSizeChange">
             </el-pagination>
@@ -166,6 +166,7 @@
         },
         handleSizeChange(pageSize){
           this.pageSize = pageSize;
+          // this.page = 1;
           this.loadHouseList(this.page, pageSize);          
         },
         loadHouseList(page, pageSize){

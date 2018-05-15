@@ -87,7 +87,7 @@
               {{saleType == 2 ? '可售' : '不可售'}}
             </el-col>
             <el-col :span="2">
-              {{recommend == 1 ? '推荐房源' : ''}}                
+              <span style="white-space: nowrap;">{{recommend == 1 ? '推荐房源' : ''}}</span>                
             </el-col>
           </el-col>
           <el-col :span="12">
