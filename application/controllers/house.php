@@ -49,11 +49,11 @@ class House extends CI_Controller {
     ));
   }
 
-
+  
 
   
   //提交房源
-  public function commit_house_info(){
+  public function commit_house_info(){//修改
     $village = $this -> input -> get('village');
     $house_name = $this -> input -> get('houseName');
     $house_size = $this -> input -> get('houseSize');

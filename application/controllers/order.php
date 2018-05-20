@@ -36,6 +36,17 @@ class Order extends CI_Controller{
     echo json_encode($order);
   }
 
+  // 取消订单
+  public function cancel_order(){
+    $order_num = $this -> input -> get('orderNum');
+    $row = $this -> order_model -> update_order_by_order_num($order_num);
+    if($row > 0){
+      echo 'success';
+    }else{
+      echo 'fail';
+    }
+  }
+
 
 
 }

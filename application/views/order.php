@@ -40,6 +40,7 @@
                   <th>预定人</th>
                   <th>联系电话</th>
                   <th>订单总价</th>
+                  <th>订单状态</th>
                   <th>操作</th>                  
                 </tr>
               </thead>
@@ -52,7 +53,9 @@
                   <td>{{order.real_name}}</td>
                   <td>{{order.phone_num}}</td>  
                   <td>{{order.total_price}}.00</td>
+                  <td>{{order.is_finished == 1 ? '未完成' : '已完成' }}</td>                  
                   <td>
+                    <a href="javascript:;" v-on:click="cancelOrder(order.order_num)" v-if="order.is_finished == 1">取消</a>
                     <a :href="`order/order_detail?orderId=${order.order_num}`">详情</a>                  
                   </td>
                 </tr>
@@ -103,6 +106,41 @@
         },
         searchOrder(){
           this.loadOrderList(this.page, this.pageSize, this.isFinished);          
+        },
+        cancelOrder(orderNum){
+          this.$confirm('确认删除该订单，是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            axios.get('order/cancel_order', {
+              params: { orderNum }
+            }).then(res => {
+              if(res.data == 'success'){
+                this.$message({
+                  type: 'success',
+                  showClose: true,
+                  message: '订单取消成功',
+                  duration: 1000
+                });
+              }else{
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: '订单取消失败',
+                  duration: 1000
+                });
+              }
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              showClose: true,
+              message: '已取消删除',
+              duration: 1000
+            });
+          });
+          
         },
         loadOrderList(page, pageSize, isFinished){
           axios.get('order/get_all_order', {
